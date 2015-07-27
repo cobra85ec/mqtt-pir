@@ -12,30 +12,22 @@ byte ip[]     = { 192, 168, 1, 200 };
 
 
 EthernetClient ethClient;
-PubSubClient client(MQTT_SERVER, 1883, 0, CLIENT_ID);
+PubSubClient client(MQTT_SERVER, 1883, 0, ethClient);
 
 
 void setup() {
-  pinMode(11, OUTPUT);
-  Serial.begin(9600);
-    Ethernet.begin(mac);
-  client.connect("arduinoClient");
-client.publish(MQTT_TOPIC,"Sensor UP");
+  Ethernet.begin(mac);
+  client.connect(CLIENT_ID);
+  client.publish(MQTT_TOPIC,"Sensor UP");
 }
 
 void loop() {
   val = digitalRead(pirPin); //read state of the PIR
   
-  if (val == LOW) {
-    digitalWrite(11, LOW);
-
-  }
-  else {
-  
-    digitalWrite(11, HIGH);
-    Serial.println("Motion!"); //if the value read was high, there was motion
+  if (val == HIGH) {
     client.publish(MQTT_TOPIC,"Motion");
   }
   
   delay(1000);
+  client.loop();
 }
