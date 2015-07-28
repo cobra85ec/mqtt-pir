@@ -24,8 +24,11 @@ void setup() {
 void loop() {
   val = digitalRead(pirPin); //read state of the PIR
   
-  if (val == HIGH) {
-    client.publish(MQTT_TOPIC,"Motion");
+  if (val == LOW) {
+    client.publish(MQTT_TOPIC, "0");
+  }
+  else {
+    client.publish(MQTT_TOPIC,"1");
   }
   
   delay(1000);
